@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Inventory Tracking Web Application
+    </title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<h1>Inventory Tracking Web Application</h1>
+	<hr>
+			<div class="inventory-form">
+                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                    <div>
+                        <label>Name of Item*</label><label class="validation-error hide" id="itemNameValidationError">This field is required.</label>
+                        <input type="text" name="itemName" id="itemName">
+                    </div>
+                    <div>
+                        <label>Serial Number</label>
+                        <input type="text" name="serial" id="serial">
+                    </div>
+                    <div>
+                        <label>Cost per Unit</label>
+                        <input type="text" name="cost" id="cost">
+                    </div>
+                    <div>
+                        <label>Sale Price</label>
+                        <input type="text" name="price" id="price">
+                    </div>
+                    <div>
+                        <label>In Stock</label>
+                        <input type="text" name="stock" id="stock">
+                    </div>
+                    <div>
+                        <label>Location</label>
+                        <input type="text" name="location" id="location">
+                    </div>
+                    <div  class="form-action-buttons">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+		</div>
+		<br/>
+		<div class = "inventory-table">
+                <table class="list" id="inventoryList">
+                    <thead>
+                        <tr>
+                            <th>Name of Item</th>
+                            <th>Serial Number</th>
+                            <th>Cost Per Unit</th>
+                            <th>Sale Price</th>
+                            <th>In Stock</th>
+                            <th>Location</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+        </div>
+    <script>
+var selectedRow = null
+
+function onFormSubmit() { //Submits the data in the input texts and inserts the data inside a data column.
+    if (validateName()) {
+        var formData = readFormData();
+        if (selectedRow == null)
+            insertNewRecord(formData);
+        else
+            updateRecord(formData);
+        resetForm();
+    }
+}
+
+function readFormData() { //reads the data inputed by the user
+    var formData = {};
+    formData["itemName"] = document.getElementById("itemName").value;
+    formData["serial"] = document.getElementById("serial").value;
+    formData["cost"] = document.getElementById("cost").value;
+    formData["price"] = document.getElementById("price").value;
+    formData["stock"] = document.getElementById("stock").value;
+    formData["location"] = document.getElementById("location").value;
+    return formData;
+}
+
+function insertNewRecord(data) { //creates the columns and rows of the inputed user data
+    var table = document.getElementById("inventoryList").getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow(table.length);
+    cell1 = newRow.insertCell(0);
+    cell1.innerHTML = data.itemName;
+    cell2 = newRow.insertCell(1);
+    cell2.innerHTML = data.serial;
+    cell3 = newRow.insertCell(2);
+    cell3.innerHTML = data.cost;
+    cell4 = newRow.insertCell(3);
+    cell4.innerHTML = data.price;
+    cell5 = newRow.insertCell(4);
+    cell5.innerHTML = data.stock;
+    cell6 = newRow.insertCell(5);
+    cell6.innerHTML = data.location;
+    cell6 = newRow.insertCell(6);
+    cell6.innerHTML = `<a onClick="onEdit(this)">Edit</a>
+                       <a onClick="onDelete(this)">Delete</a>`;
+}
+
+function resetForm() { //resets the form page when row is deleted, and with the function onFormSubmit.
+    document.getElementById("itemName").value = "";
+    document.getElementById("serial").value = "";
+    document.getElementById("cost").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("stock").value = "";
+    document.getElementById("location").value = "";
+    selectedRow = null;
+}
+
+function onEdit(td) { //edit the selecte row of inventory data
+    selectedRow = td.parentElement.parentElement;
+    document.getElementById("itemName").value = selectedRow.cells[0].innerHTML;
+    document.getElementById("serial").value = selectedRow.cells[1].innerHTML;
+    document.getElementById("cost").value = selectedRow.cells[2].innerHTML;
+    document.getElementById("price").value = selectedRow.cells[3].innerHTML;
+    document.getElementById("stock").value = selectedRow.cells[4].innerHTML;
+    document.getElementById("location").value = selectedRow.cells[5].innerHTML;
+}
+function updateRecord(formData) { //used for onformSubmit when the submit button is clicked, the table is updated
+    selectedRow.cells[0].innerHTML = formData.itemName;
+    selectedRow.cells[1].innerHTML = formData.serial;
+    selectedRow.cells[2].innerHTML = formData.cost;
+    selectedRow.cells[3].innerHTML = price;
+    selectedRow.cells[4].innerHTML = formData.stock;
+    selectedRow.cells[5].innerHTML = formData.location;
+}
+
+function onDelete(td) { //deletes the selected row of inventory data
+    if (confirm('Are you sure to delete this record ?')) {
+        row = td.parentElement.parentElement;
+        document.getElementById("inventoryList").deleteRow(row.rowIndex);
+        resetForm();
+    }
+}
+function validateName() { //validates that there is a name of the item and if not, then the form will not be submitted. 
+    isValid = true;
+    if (document.getElementById("itemName").value == "") {
+        isValid = false;
+        document.getElementById("itemNameValidationError").classList.remove("hide");
+    } else {
+        isValid = true;
+        if (!document.getElementById("itemNameValidationError").classList.contains("hide"))
+            document.getElementById("itemNameValidationError").classList.add("hide");
+    }
+    return isValid;
+}
+    </script>
+</body>
+</html>
