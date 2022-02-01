@@ -3,43 +3,62 @@
 
 <head>
     <title>
-        Inventory Tracking Web Application
+        Job Tracking Software
     </title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-	<h1>Inventory Tracking Web Application</h1>
+	<h1>Duval Precision Grinding Job Tracking Software</h1>
 	<hr>
 			<div class="inventory-form">
                 <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
                     <div>
-                        <label>Name of Item*</label><label class="validation-error hide" id="itemNameValidationError">This field is required.</label>
-                        <input type="text" name="itemName" id="itemName">
+                        <label>Customer Name*</label><label class="validation-error hide" id="itemNameValidationError">This field is required.</label>
+                        <input type="text" name="customerName" id="customerName">
                     </div>
                     <div>
-                        <label>Serial Number</label>
-                        <input type="text" name="serial" id="serial">
+                        <label>Part Number</label>
+                        <input type="text" name="partNum" id="partNum">
+                    </div>
+                    <div>
+                        <label>REV Number</label>
+                        <input type="text" name="revNum" id="revNum">
+                    </div>
+                    <div>
+                        <label>Job Number</label>
+                        <input type="text" name="jobNum" id="jobNum">
+                    </div>
+                    <div>
+                        <label>Set Up Description</label> <br>
+                        <textarea name="dow" cols="50" rows="10" id="dow"></textarea>                   
+                     </div>
+                    <div>
+                        <label>Time</label>
+                        <input type="text" name="time" id="time">
                     </div>
                     <div>
                         <label>Cost per Unit</label>
                         <input type="text" name="cost" id="cost">
                     </div>
                     <div>
-                        <label>Sale Price</label>
+                        <label>Total Price</label>
                         <input type="text" name="price" id="price">
                     </div>
                     <div>
-                        <label>In Stock</label>
-                        <input type="text" name="stock" id="stock">
+                        <label>Start Date</label>
+                        <input type="text" name="s_date" id="s_date">
                     </div>
                     <div>
-                        <label>Location</label>
-                        <input type="text" name="location" id="location">
+                        <label>Delivery Date</label>
+                        <input type="text" name="e_date" id="e_date">
                     </div>
                     <div  class="form-action-buttons">
-                        <input type="submit" value="Submit">
+                        <input type="submit" value="Enter" class="inline">
+                    </div>
+                    <div class="form-action-buttons">
+                        <input value="Save" type="button" class="inline">
                     </div>
                 </form>
 		</div>
@@ -48,12 +67,16 @@
                 <table class="list" id="inventoryList">
                     <thead>
                         <tr>
-                            <th>Name of Item</th>
-                            <th>Serial Number</th>
+                            <th>Customer Name</th>
+                            <th>Part Number</th>
+                            <th>REV Name</th>
+                            <th>Job Number</th>
+                            <th>Set Up Description</th>
+                            <th>Time</th>
                             <th>Cost Per Unit</th>
-                            <th>Sale Price</th>
-                            <th>In Stock</th>
-                            <th>Location</th>
+                            <th>Total Cost</th>
+                            <th>Start Date</th>
+                            <th>Delivery Date</th>
                             <th>Options</th>
                         </tr>
                     </thead>
@@ -65,7 +88,7 @@
     <script>
 var selectedRow = null
 
-function onFormSubmit() { //Submits the data in the input texts and inserts the data inside a data column.
+function onFormSubmit() { //Submits the data in the input texts and inserts the data inside a data row.
     if (validateName()) {
         var formData = readFormData();
         if (selectedRow == null)
@@ -78,12 +101,16 @@ function onFormSubmit() { //Submits the data in the input texts and inserts the 
 
 function readFormData() { //reads the data inputed by the user
     var formData = {};
-    formData["itemName"] = document.getElementById("itemName").value;
-    formData["serial"] = document.getElementById("serial").value;
+    formData["customerName"] = document.getElementById("customerName").value;
+    formData["partNum"] = document.getElementById("partNum").value;
+    formData["revNum"] = document.getElementById("revNum").value;
+    formData["jobNum"] = document.getElementById("jobNum").value;
+    formData["dow"] = document.getElementById("dow").value;
+    formData["time"] = document.getElementById("time").value;
     formData["cost"] = document.getElementById("cost").value;
     formData["price"] = document.getElementById("price").value;
-    formData["stock"] = document.getElementById("stock").value;
-    formData["location"] = document.getElementById("location").value;
+    formData["s_date"] = document.getElementById("s_date").value;
+    formData["e_date"] = document.getElementById("e_date").value;
     return formData;
 }
 
@@ -91,52 +118,72 @@ function insertNewRecord(data) { //creates the columns and rows of the inputed u
     var table = document.getElementById("inventoryList").getElementsByTagName('tbody')[0];
     var newRow = table.insertRow(table.length);
     cell1 = newRow.insertCell(0);
-    cell1.innerHTML = data.itemName;
+    cell1.innerHTML = data.customerName;
     cell2 = newRow.insertCell(1);
-    cell2.innerHTML = data.serial;
+    cell2.innerHTML = data.partNum;
     cell3 = newRow.insertCell(2);
-    cell3.innerHTML = data.cost;
+    cell3.innerHTML = data.revNum;
     cell4 = newRow.insertCell(3);
-    cell4.innerHTML = data.price;
+    cell4.innerHTML = data.jobNum;
     cell5 = newRow.insertCell(4);
-    cell5.innerHTML = data.stock;
+    cell5.innerHTML = data.dow;
     cell6 = newRow.insertCell(5);
-    cell6.innerHTML = data.location;
-    cell6 = newRow.insertCell(6);
-    cell6.innerHTML = `<a onClick="onEdit(this)">Edit</a>
+    cell6.innerHTML = data.time;
+    cell7 = newRow.insertCell(6);
+    cell7.innerHTML = data.cost;
+    cell8 = newRow.insertCell(7);
+    cell8.innerHTML = data.price;
+    cell9 = newRow.insertCell(8);
+    cell9.innerHTML = data.s_date;
+    cell10 = newRow.insertCell(9);
+    cell10.innerHTML = data.e_date;
+    cell10 = newRow.insertCell(10);
+    cell10.innerHTML = `<a onClick="onEdit(this)">Edit</a>
                        <a onClick="onDelete(this)">Delete</a>`;
 }
 
 function resetForm() { //resets the form page when row is deleted, and with the function onFormSubmit.
-    document.getElementById("itemName").value = "";
-    document.getElementById("serial").value = "";
+    document.getElementById("customerName").value = "";
+    document.getElementById("partNum").value = "";
+    document.getElementById("revNum").value = "";
+    document.getElementById("jobNum").value = "";
+    document.getElementById("dow").value = "";
+    document.getElementById("time").value = "";
     document.getElementById("cost").value = "";
     document.getElementById("price").value = "";
-    document.getElementById("stock").value = "";
-    document.getElementById("location").value = "";
+    document.getElementById("s_date").value = "";
+    document.getElementById("e_date").value = "";
     selectedRow = null;
 }
 
 function onEdit(td) { //edit the selecte row of inventory data
     selectedRow = td.parentElement.parentElement;
-    document.getElementById("itemName").value = selectedRow.cells[0].innerHTML;
-    document.getElementById("serial").value = selectedRow.cells[1].innerHTML;
-    document.getElementById("cost").value = selectedRow.cells[2].innerHTML;
-    document.getElementById("price").value = selectedRow.cells[3].innerHTML;
-    document.getElementById("stock").value = selectedRow.cells[4].innerHTML;
-    document.getElementById("location").value = selectedRow.cells[5].innerHTML;
+    document.getElementById("customerName").value = selectedRow.cells[0].innerHTML;
+    document.getElementById("partNum").value = selectedRow.cells[1].innerHTML;
+    document.getElementById("revNum").value = selectedRow.cells[2].innerHTML;
+    document.getElementById("jobNum").value = selectedRow.cells[3].innerHTML;
+    document.getElementById("dow").value = selectedRow.cells[4].innerHTML;
+    document.getElementById("time").value = selectedRow.cells[5].innerHTML;
+    document.getElementById("cost").value = selectedRow.cells[6].innerHTML;
+    document.getElementById("price").value = selectedRow.cells[7].innerHTML;
+    document.getElementById("s_date").value = selectedRow.cells[8].innerHTML;
+    document.getElementById("e_date").value = selectedRow.cells[9].innerHTML;
 }
 function updateRecord(formData) { //used for onformSubmit when the submit button is clicked, the table is updated
-    selectedRow.cells[0].innerHTML = formData.itemName;
-    selectedRow.cells[1].innerHTML = formData.serial;
-    selectedRow.cells[2].innerHTML = formData.cost;
-    selectedRow.cells[3].innerHTML = price;
-    selectedRow.cells[4].innerHTML = formData.stock;
-    selectedRow.cells[5].innerHTML = formData.location;
+    selectedRow.cells[0].innerHTML = formData.customerName;
+    selectedRow.cells[1].innerHTML = formData.partNum;
+    selectedRow.cells[2].innerHTML = formData.revNum;
+    selectedRow.cells[3].innerHTML = formData.jobNum;
+    selectedRow.cells[4].innerHTML = formData.dow;
+    selectedRow.cells[5].innerHTML = formData.time;
+    selectedRow.cells[6].innerHTML = formData.cost;
+    selectedRow.cells[7].innerHTML = formData.price;
+    selectedRow.cells[8].innerHTML = formData.s_date;
+    selectedRow.cells[9].innerHTML = formData.e_date;
 }
 
 function onDelete(td) { //deletes the selected row of inventory data
-    if (confirm('Are you sure to delete this record ?')) {
+    if (confirm('Are you sure to delete this row?')) {
         row = td.parentElement.parentElement;
         document.getElementById("inventoryList").deleteRow(row.rowIndex);
         resetForm();
@@ -144,16 +191,17 @@ function onDelete(td) { //deletes the selected row of inventory data
 }
 function validateName() { //validates that there is a name of the item and if not, then the form will not be submitted. 
     isValid = true;
-    if (document.getElementById("itemName").value == "") {
+    if (document.getElementById("customerName").value == "") {
         isValid = false;
-        document.getElementById("itemNameValidationError").classList.remove("hide");
+        document.getElementById("customerNameValidationError").classList.remove("hide");
     } else {
         isValid = true;
-        if (!document.getElementById("itemNameValidationError").classList.contains("hide"))
-            document.getElementById("itemNameValidationError").classList.add("hide");
+        if (!document.getElementById("customerNameValidationError").classList.contains("hide"))
+            document.getElementById("customerNameValidationError").classList.add("hide");
     }
     return isValid;
 }
+
     </script>
 </body>
 </html>
